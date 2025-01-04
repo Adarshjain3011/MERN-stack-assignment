@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     token:{type:String},
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    sentRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    receivedRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     interests: [String], // Optional
 },
 

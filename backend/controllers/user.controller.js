@@ -38,3 +38,4 @@ const searchUser = async (req, res) => {
 };
 
 export default searchUser;
+
