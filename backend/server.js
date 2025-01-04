@@ -1,9 +1,20 @@
 
 import express from "express";
 
+import connectDB from "./config/db.config.js";
+
+import userRoutes from "./routes/user.route.js";
+
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const app = express();
 
 app.use(express.json());
+
+connectDB();
+
 
 app.listen(4000,()=>{
 
@@ -18,4 +29,7 @@ app.get("/",(req,res)=>{
 
     
 })
+
+
+app.use("/api/",userRoutes);
 
