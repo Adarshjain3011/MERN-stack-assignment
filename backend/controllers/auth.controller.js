@@ -13,9 +13,13 @@ const signupSchema = Joi.object({
 });
 
 const signupController = async (req, res) => {
+
+    console.log("hellow")
     try {
         const { username, email, password, interests } = req.body;
 
+        console.log("1");
+        
         // Validate the input
         const { error } = signupSchema.validate({ username, email, password, interests });
         if (error) {
@@ -91,12 +95,12 @@ const loginController = async (req, res) => {
 
         // Set the token as a cookie
         res.cookie("token", token, {
-            httpOnly: true, // Prevent client-side JavaScript access to the cookie
-            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-            sameSite: "strict", // Prevent CSRF attacks
-            maxAge: 24 * 60 * 60 * 1000, // Cookie validity: 1 day
-        });
-
+            httpOnly: true,
+            secure: false, // Use true in production with HTTPS
+            sameSite: 'lax', // Or 'none' for cross-origin requests
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+          });
+          
         // Send success response
         const responseData = {
             userId: user._id,

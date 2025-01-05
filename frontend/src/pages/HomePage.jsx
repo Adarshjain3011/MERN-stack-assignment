@@ -1,6 +1,6 @@
 // src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
-import axios from '../axios';
+import axios from 'axios';
 import SearchBar from '../components/SearchBar';
 import UserCard from '../components/UserCard';
 import FriendRequest from '../components/FriendRequest';
@@ -12,50 +12,50 @@ const HomePage = () => {
   const [friendRecommendations, setFriendRecommendations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    // Fetch all users
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get('/api/users');
-        setUsers(response.data);
-      } catch (err) {
-        console.error('Error fetching users:', err);
-      }
-    };
+  // useEffect(() => {
+  //   // Fetch all users
+  //   const fetchUsers = async () => {
+  //     try {
+  //       const response = await axios.get('/api/users');
+  //       setUsers(response.data);
+  //     } catch (err) {
+  //       console.error('Error fetching users:', err);
+  //     }
+  //   };
 
-    // Fetch friend requests
-    const fetchFriendRequests = async () => {
-      try {
-        const response = await axios.get('/api/friend-requests');
-        setFriendRequests(response.data);
-      } catch (err) {
-        console.error('Error fetching friend requests:', err);
-      }
-    };
+  //   // Fetch friend requests
+  //   const fetchFriendRequests = async () => {
+  //     try {
+  //       const response = await axios.get('/api/friend-requests');
+  //       setFriendRequests(response.data);
+  //     } catch (err) {
+  //       console.error('Error fetching friend requests:', err);
+  //     }
+  //   };
 
-    // Fetch friend recommendations
-    const fetchFriendRecommendations = async () => {
-      try {
-        const response = await axios.get('/api/friend-recommendations');
-        setFriendRecommendations(response.data);
-      } catch (err) {
-        console.error('Error fetching friend recommendations:', err);
-      }
-    };
+  //   // Fetch friend recommendations
+  //   const fetchFriendRecommendations = async () => {
+  //     try {
+  //       const response = await axios.get('/api/friend-recommendations');
+  //       setFriendRecommendations(response.data);
+  //     } catch (err) {
+  //       console.error('Error fetching friend recommendations:', err);
+  //     }
+  //   };
 
-    fetchUsers();
-    fetchFriendRequests();
-    fetchFriendRecommendations();
-  }, []);
+  //   fetchUsers();
+  //   fetchFriendRequests();
+  //   fetchFriendRecommendations();
+  // }, []);
 
-  const handleSendFriendRequest = async (user) => {
-    try {
-      await axios.post('/api/friend-requests', { userId: user._id });
-      setFriendRequests([...friendRequests, { username: user.username }]);
-    } catch (err) {
-      console.error('Error sending friend request:', err);
-    }
-  };
+  // const handleSendFriendRequest = async (user) => {
+  //   try {
+  //     await axios.post('/api/friend-requests', { userId: user._id });
+  //     setFriendRequests([...friendRequests, { username: user.username }]);
+  //   } catch (err) {
+  //     console.error('Error sending friend request:', err);
+  //   }
+  // };
 
   const handleAcceptFriendRequest = async (request) => {
     try {

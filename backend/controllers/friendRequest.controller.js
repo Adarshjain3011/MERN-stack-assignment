@@ -26,34 +26,54 @@ const findUsers = async (senderId, receiverId) => {
 
 // Send Friend Request
 export const sendFriendRequest = async (req, res) => {
-  try {
-    const { receiverId } = req.body;
-    const senderId = req.user.userId;
+    try {
+        const { receiverId } = req.body;
+        const senderId = req.user.userId;
 
-    // Validate input
-    const { error } = validateFriendRequest({ senderId, receiverId });
-    if (error) return errorResponse(res, error.details[0].message, 400);
+        // Validate input
+        const { error } = friendRequestValidationSchema.validate({ senderId, receiverId });
+        if (error) {
+            return errorResponse(res, error.details[0].message, 400);
+        }
 
-    // Find users
-    const { sender, receiver } = await findUsers(senderId, receiverId);
+        // Check if sender and receiver exist
+        const sender = await User.findById(senderId);
+        const receiver = await User.findById(receiverId);
 
-    // Check if request already sent
-    if (sender.sentRequests.includes(receiverId)) {
-      return errorResponse(res, "Friend request already sent.", 400);
+        if (!sender || !receiver) {
+            return errorResponse(res, "Sender or Receiver not found.", 404);
+        }
+
+        // Check if request already exists
+        if (sender.sentRequests.includes(receiverId)) {
+            return errorResponse(res, "Friend request already sent.", 400);
+        }
+
+        // Add friend request
+        sender.sentRequests.push(receiverId);
+        receiver.receivedRequests.push(senderId);
+
+        await sender.save();
+        await receiver.save();
+
+        // Emit event to notify the receiver in real-time
+        const receiverSocketId = activeUsers.get(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("friendRequestReceived", {
+                senderId,
+                senderName: sender.name,
+            });
+        }
+
+        return successResponse(res, "Friend request sent successfully.", { senderId, receiverId });
+    } catch (error) {
+        console.error("Error in sendFriendRequest:", error.message);
+        return errorResponse(res, "Internal server error.", 500);
     }
-
-    // Add friend request
-    sender.sentRequests.push(receiverId);
-    receiver.receivedRequests.push(senderId);
-
-    await Promise.all([sender.save(), receiver.save()]);
-
-    return successResponse(res, "Friend request sent successfully!", { senderId, receiverId });
-  } catch (error) {
-    console.error("Error in sendFriendRequest:", error.message);
-    return errorResponse(res, error.message || "Internal server error.", 500);
-  }
 };
+
+
+
 
 // Cancel Friend Request
 export const cancelSendFriendRequest = async (req, res) => {
