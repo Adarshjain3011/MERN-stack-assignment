@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import connectDB from "./config/db.config.js";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.routes.js";
+import friendRequestRoute from "./routes/friendRequest.route.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -28,11 +29,12 @@ connectDB();
 // Create HTTP server and Socket.io instance
 const server = http.createServer(app);
 
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: "*", // Match with the frontend origin
     methods: ["GET", "POST"], // Allowed HTTP methods
     credentials: true, // Allow cookies if necessary
+    
   },
 });
 
@@ -44,7 +46,7 @@ io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   // Register a user with their socket ID
-  socket.on("register", (userId) => {
+  socket.on("login", (userId) => {
     activeUsers.set(userId, socket.id);
     console.log(`${userId} registered with socket ID ${socket.id}`);
   });
@@ -83,9 +85,12 @@ app.use("/api",authRoutes);
 
 app.use("/api",userRoutes);
 
+app.use("/api",friendRequestRoute);
 
 // Start the Express server
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
+
+

@@ -101,17 +101,17 @@ const loginController = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000, // 1 day
           });
           
-        // Send success response
-        const responseData = {
-            userId: user._id,
-            username: user.username,
-            email: user.email,
-            interests: user.interests,
-            token, // Include the token in the response
+        // // Send success response
+        // const responseData = {
+        //     userId: user._id,
+        //     username: user.username,
+        //     email: user.email,
+        //     interests: user.interests,
+        //     token, // Include the token in the response
 
-        };
+        // };
 
-        return successResponse(res, "Login successful!", responseData, 200);
+        return successResponse(res, "Login successful!", user, 200);
 
     } catch (error) {
         console.error(error);

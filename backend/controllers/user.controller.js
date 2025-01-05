@@ -18,11 +18,17 @@ export const searchUser = async (req, res) => {
 
         // Perform a case-insensitive search for username or email
         const user = await User.find({
-            $or: [
-                { username: { $regex: userNameOrEmail, $options: "i" } },
-                { email: { $regex: userNameOrEmail, $options: "i" } },
+            $and: [
+                {
+                    $or: [
+                        { username: { $regex: userNameOrEmail, $options: "i" } },
+                        { email: { $regex: userNameOrEmail, $options: "i" } },
+                    ],
+                },
+                { _id: { $ne: req.user.userId } }, // Exclude the user with the given userId
             ],
         });
+        
 
         // Check if no users are found
         if (!user || user.length === 0) {

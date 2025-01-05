@@ -81,59 +81,16 @@ const HomePage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 py-8 px-4">
+    <div className="relative bg-gradient-to-br from-blue-50 to-gray-100">
     
       <Navbar></Navbar>
 
-      <div className="container mx-auto max-w-4xl space-y-8">
+      <div className="relative mt-20 z-20">
         {/* Search Bar */}
-        <div className="bg-white shadow-lg rounded-lg p-4">
+        <div className="bg-white relative shadow-lg rounded-lg p-4">
           <SearchBar onSearch={setSearchQuery} />
         </div>
 
-        {/* Friend Requests */}
-        {friendRequests.length > 0 && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Friend Requests</h2>
-            {friendRequests.map((request) => (
-              <FriendRequest
-                key={request.username}
-                request={request}
-                onAccept={handleAcceptFriendRequest}
-                onReject={handleRejectFriendRequest}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Users List */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Users</h2>
-          {filteredUsers.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {filteredUsers.map((user) => (
-                <UserCard
-                  key={user._id}
-                  user={user}
-                  onSendRequest={handleSendFriendRequest}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">No users found</p>
-          )}
-        </div>
-
-        {/* Friend Recommendations */}
-        {friendRecommendations.length > 0 && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Friend Recommendations</h2>
-            <FriendRecommendation
-              recommendations={friendRecommendations}
-              onSendRequest={handleSendFriendRequest}
-            />
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Input from "../components/common/Input";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const SignUpComponent = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ const SignUpComponent = () => {
     return newErrors;
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async(e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -45,6 +46,31 @@ const SignUpComponent = () => {
       toast.error("Please correct the errors before submitting.");
       return;
     }
+
+    console.log(formData.interests);
+    
+
+    console.log(formData.interests.split(","));
+
+    // submit form data 
+
+    const updatedFormData = {
+
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      interests: formData.interests.split(","),
+
+    }
+
+    const response = await axios.post("http://localhost:4000/api/signup",updatedFormData,{
+
+      withCredentials:true,
+
+    })
+
+    console.log("response:", response.data);
+
 
     console.log("Form submitted:", formData);
     toast.success("Form submitted successfully!");
@@ -151,8 +177,8 @@ const SignUpComponent = () => {
             type="text"
             name="interests"
             placeholder="Enter your interests"
-            value={Array.isArray(formData.interests) ? formData.interests.join(', ') : ''} // Safeguard
-            onChange={handleInterestsChange}
+            value={formData.interests} // Safeguard
+            onChange={handleChange}
             required
             className={`${
               errors.interests ? "border-red-500" : "border-gray-300"

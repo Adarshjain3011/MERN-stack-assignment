@@ -2,6 +2,10 @@ import Joi from "joi";
 import User from "../models/user.model.js";
 import { errorResponse, successResponse } from "../utils/responseHandler.js";
 
+import { activeUsers } from "../server.js";
+
+import { io } from "../server.js";
+
 // Define Joi schema for validation
 const friendRequestValidationSchema = Joi.object({
   senderId: Joi.string().required(),
@@ -25,9 +29,12 @@ const findUsers = async (senderId, receiverId) => {
 };
 
 // Send Friend Request
-export const sendFriendRequest = async (req, res) => {
+const sendFriendRequest = async (req, res) => {
     try {
         const { receiverId } = req.body;
+
+        console.log("reciverId",receiverId);
+
         const senderId = req.user.userId;
 
         // Validate input
@@ -61,7 +68,7 @@ export const sendFriendRequest = async (req, res) => {
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("friendRequestReceived", {
                 senderId,
-                senderName: sender.name,
+                senderName: sender.username,
             });
         }
 
@@ -76,7 +83,8 @@ export const sendFriendRequest = async (req, res) => {
 
 
 // Cancel Friend Request
-export const cancelSendFriendRequest = async (req, res) => {
+
+const cancelSendFriendRequest = async (req, res) => {
   try {
     const { receiverId } = req.body;
     const senderId = req.user.userId;
@@ -94,9 +102,13 @@ export const cancelSendFriendRequest = async (req, res) => {
     }
 
     // Remove friend request
-    sender.sentRequests = sender.sentRequests.filter((id) => id !== receiverId);
-    receiver.receivedRequests = receiver.receivedRequests.filter((id) => id !== senderId);
+    sender.sentRequests = sender.sentRequests.filter((id) => id.toString() !== receiverId);
+    sender.markModified('sentRequests');
 
+    receiver.receivedRequests = receiver.receivedRequests.filter((id) => id.toString() !== senderId);
+    receiver.markModified('receivedRequests');
+
+    // Save changes
     await Promise.all([sender.save(), receiver.save()]);
 
     return successResponse(res, "Friend request cancelled successfully!", { senderId, receiverId });
@@ -106,8 +118,9 @@ export const cancelSendFriendRequest = async (req, res) => {
   }
 };
 
+
 // Accept Friend Request
-export const acceptFriendRequest = async (req, res) => {
+const acceptFriendRequest = async (req, res) => {
     try {
         const { senderId } = req.body;
         const receiverId = req.user.userId;
@@ -141,5 +154,7 @@ export const acceptFriendRequest = async (req, res) => {
     }
 };
 
+
+export {sendFriendRequest,cancelSendFriendRequest,acceptFriendRequest,};
 
 

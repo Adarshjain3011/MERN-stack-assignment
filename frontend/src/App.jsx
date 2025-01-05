@@ -10,9 +10,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import PublicRoute from './components/PublicRoute';
 
+
 const App = () => {
   return (
-    <div className="container mx-auto px-4">
+    <div className="w-screen min-h-screen">
       <Routes>
         <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />

@@ -11,13 +11,18 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from './redux/store.jsx'; // Ensure persistor is exported from your store setup
 
+import { SocketProvider } from './context/SocketContext';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Toaster />
-          <App />
+          <SocketProvider>
+
+            <App />
+
+          </SocketProvider>
         </BrowserRouter>
       </PersistGate>
     </Provider>

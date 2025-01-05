@@ -8,9 +8,17 @@ import { setUserData } from '../redux/UserSlice';
 
 import { useDispatch } from 'react-redux';
 
+import { addSentFriendRequest,addReceivedFriendRequest } from '../redux/UserSlice';
+
+import { addFriend } from '../redux/UserSlice';
+
+import { useSocket } from '../context/SocketContext';
+
 const LoginForm = () => {
 
     const dispatch = useDispatch();
+
+    const socket = useSocket();
 
     const [formData, setFormData] = useState({
         usernameOrEmail: '', // This field can be email or username
@@ -33,8 +41,20 @@ const LoginForm = () => {
         });
 
         console.log("res",response.data.data);
+
+        // Emit a login event to the server
+
+        console.log("userid is ",response.data.data._id)
+
+        socket.emit('login',response?.data?.data?._id)
     
         dispatch(setUserData(response.data.data));
+
+        dispatch(addSentFriendRequest(response.data.data.sentRequests));
+
+        dispatch(addReceivedFriendRequest(response.data.data.receivedRequests));
+
+        dispatch(addFriend(response.data.data.friends));
 
         // Reset form after submission
         setFormData({
