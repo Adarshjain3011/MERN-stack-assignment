@@ -4,7 +4,14 @@ import Button from './common/Button';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
+import { setUserData } from '../redux/UserSlice';
+
+import { useDispatch } from 'react-redux';
+
 const LoginForm = () => {
+
+    const dispatch = useDispatch();
+
     const [formData, setFormData] = useState({
         usernameOrEmail: '', // This field can be email or username
         password: '',
@@ -25,8 +32,9 @@ const LoginForm = () => {
             
         });
 
-        console.log("res",response.data);
-        
+        console.log("res",response.data.data);
+    
+        dispatch(setUserData(response.data.data));
 
         // Reset form after submission
         setFormData({

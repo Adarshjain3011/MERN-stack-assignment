@@ -6,6 +6,7 @@ const initialState = {
     data:null,
     error: null,
     loading: false,
+    loggedIn:false,
 }
 
 const userSlice = createSlice({
@@ -19,6 +20,7 @@ const userSlice = createSlice({
             state.data = action.payload;
             state.error = null;
             state.loading = false;
+            state.loggedIn = true;
 
         },
 

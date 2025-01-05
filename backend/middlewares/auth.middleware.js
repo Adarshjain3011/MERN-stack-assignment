@@ -1,10 +1,12 @@
 import jwt from "jsonwebtoken";
 import { errorResponse } from "../utils/responseHandler.js";
 
-const authMiddleware = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
     try {
         // Get the token from cookies
         const token = req.cookies.token;
+
+        console.log("token at auth middleware",token);
 
         // Check if token exists
         if (!token) {
@@ -29,6 +31,5 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-export default authMiddleware;
 
 

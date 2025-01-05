@@ -2,7 +2,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import connectDB from "./config/db.config.js";
-import authRoutes from "./routes/user.route.js";
+import userRoutes from "./routes/user.route.js";
+import authRoutes from "./routes/auth.routes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -78,7 +79,10 @@ app.get("/", (req, res) => {
 });
 
 // Use user routes
-app.use("/api", authRoutes);
+app.use("/api",authRoutes);
+
+app.use("/api",userRoutes);
+
 
 // Start the Express server
 const PORT = process.env.PORT || 4000;

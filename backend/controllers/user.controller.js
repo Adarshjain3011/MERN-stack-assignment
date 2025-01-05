@@ -6,7 +6,7 @@ const searchUserValidation = Joi.object({
     userNameOrEmail: Joi.string().required(),
 });
 
-const searchUser = async (req, res) => {
+export const searchUser = async (req, res) => {
     try {
         const { userNameOrEmail } = req.params;
 
@@ -36,6 +36,4 @@ const searchUser = async (req, res) => {
         return errorResponse(res, "Internal server error.", 500);
     }
 };
-
-export default searchUser;
 

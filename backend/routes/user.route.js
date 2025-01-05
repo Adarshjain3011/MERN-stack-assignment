@@ -1,13 +1,13 @@
 
-import expres from "express";
+import express from "express";
 
-const router = expres.Router();
+const router = express.Router();
 
-import { signupController,loginController } from "../controllers/auth.controller.js";
+import { searchUser } from "../controllers/user.controller.js";
 
-router.post("/signup", signupController);
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
-router.post("/login", loginController);
+router.get("/searchUser/:userNameOrEmail",authMiddleware, searchUser);
 
 export default router;
 
